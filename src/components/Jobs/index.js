@@ -70,13 +70,9 @@ class Jobs extends Component {
       locationTypes,
     } = this.state
 
-    const employment = employmentTypes
-      .map(type => `empolyment_type=${type}`)
-      .join('&')
+    const employmentType = employmentTypes.join(',')
 
-    const location = locationTypes.join('%2C')
-
-    const apiUrl = `https://apis.ccbp.in/jobs?${employment}&minimum_package=${salaryRange}&search=${searchInput}&location=${location}`
+    const apiUrl = `https://apis.ccbp.in/jobs?employment_type=${employmentType}&minimum_package=${salaryRange}&search=${searchInput}`
 
     const jwtToken = Cookies.get('jwt_token')
     const options = {
@@ -101,8 +97,17 @@ class Jobs extends Component {
         jobDescription: each.job_description,
       }))
 
+      const filteredJobs =
+        locationTypes.length === 0
+          ? updatedJobsList
+          : updatedJobsList.filter(job =>
+              locationTypes.some(loc =>
+                job.location.toLowerCase().includes(loc.toLowerCase()),
+              ),
+            )
+
       this.setState({
-        jobsList: updatedJobsList,
+        jobsList: filteredJobs,
         apiStatus: apiStatusConstants.success,
       })
     } else {
@@ -140,7 +145,12 @@ class Jobs extends Component {
     const {locationTypes} = this.state
     const {value, checked} = event.target
     if (checked) {
-      this.setState({locationTypes: [...locationTypes, value]}, this.getJobs)
+      this.setState(
+        {
+          locationTypes: [...locationTypes, value],
+        },
+        this.getJobs,
+      )
     } else {
       this.setState(
         {
@@ -163,7 +173,7 @@ class Jobs extends Component {
         className="no-jobs-image"
       />
       <h1>No Jobs Found</h1>
-      <p>We Cound not find any jobs. try other filter</p>
+      <p>We could not find any jobs. Try other filters</p>
     </div>
   )
 
@@ -172,9 +182,9 @@ class Jobs extends Component {
       employmentTypesList,
       salaryRangesList,
       locationTypesList,
-      searchInput,
     } = this.props
-    const {jobsList, profileDetails} = this.state
+    const {jobsList, profileDetails, searchInput} = this.state
+    const {name, profileImageUrl, shortBio} = profileDetails
     return (
       <>
         <Header />
@@ -183,6 +193,7 @@ class Jobs extends Component {
             <div className="search-input-icon">
               <input
                 type="search"
+                role="searchbox"
                 className="search-input"
                 placeholder="Search"
                 value={searchInput}
@@ -199,12 +210,12 @@ class Jobs extends Component {
             </div>
             <div className="profile-container">
               <img
-                src={profileDetails.profileImageUrl}
+                src={profileImageUrl}
                 className="profile-logo"
                 alt="profile"
               />
-              <h1 className="profile-name">{profileDetails.name}</h1>
-              <p className="description">{profileDetails.shortBio}</p>
+              <h1 className="profile-name">{name}</h1>
+              <p className="description">{shortBio}</p>
             </div>
             <hr className="line" />
             <h1 className="list-heading">Type of Employment</h1>
@@ -257,14 +268,17 @@ class Jobs extends Component {
             <div className="second-search-input-icon">
               <input
                 type="search"
+                role="searchbox"
                 className="search-input"
                 placeholder="Search"
+                value={searchInput}
                 onChange={this.onChangeSearchInput}
               />
               <button
                 type="button"
                 data-testid="searchButton"
                 className="search-button"
+                value={searchInput}
                 onClick={this.onClickSearch}
               >
                 <BsSearch className="search-icon" />
@@ -292,13 +306,13 @@ class Jobs extends Component {
   renderFailureUI = () => (
     <div className="failure-container">
       <img
-        src="https://assets.ccbp.in/frontend/react-js/no-jobs-img.png"
+        src="https://assets.ccbp.in/frontend/react-js/failure-img.png"
         alt="failure view"
         className="failure-image"
       />
       <h1>Oops! Something Went Wrong</h1>
       <p>We cannot seem to find the page you are looking for</p>
-      <button type="button" onClick={this.getJobs}>
+      <button type="button" onClick={this.getProfile} className="ready-btn">
         Retry
       </button>
     </div>

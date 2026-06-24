@@ -11,19 +11,19 @@ import './App.css'
 const employmentTypesList = [
   {
     label: 'Full Time',
-    locationTypeId: 'FULLTIME',
+    employmentTypeId: 'FULLTIME',
   },
   {
     label: 'Part Time',
-    locationTypeId: 'PARTTIME',
+    employmentTypeId: 'PARTTIME',
   },
   {
     label: 'Freelance',
-    locationTypeId: 'FREELANCE',
+    employmentTypeId: 'FREELANCE',
   },
   {
     label: 'Internship',
-    locationTypeId: 'INTERNSHIP',
+    employmentTypeId: 'INTERNSHIP',
   },
 ]
 
@@ -48,24 +48,24 @@ const salaryRangesList = [
 
 const locationTypesList = [
   {
-    label: 'Hyderabad',
     locationTypeId: 'HYDERABAD',
+    label: 'Hyderabad',
   },
   {
-    label: 'Bangalore',
     locationTypeId: 'BANGALORE',
+    label: 'Bangalore',
   },
   {
-    label: 'Chennai',
     locationTypeId: 'CHENNAI',
+    label: 'Chennai',
   },
   {
-    label: 'Delhi',
     locationTypeId: 'DELHI',
+    label: 'Delhi',
   },
   {
-    label: 'Mumbai',
     locationTypeId: 'MUMBAI',
+    label: 'Mumbai',
   },
 ]
 
